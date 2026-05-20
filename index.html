@@ -417,7 +417,7 @@ input:focus{
 
 <div class="container">
 
-<h1>Event Check-In</h1>
+<h1> Aylesbury HSS SHakha </h1>
 
 <div class="subtitle">
 Quick Family Registration
@@ -887,7 +887,7 @@ function checkIn(){
     document.getElementById("checkinBtn");
 
   const ukPhoneRegex =
-    /^(\+44|0)7\d{9}$/;
+    /+44;
 
   msg.className = "";
 
@@ -1016,8 +1016,16 @@ function checkIn(){
             ),
 
           time:
-            new Date()
-            .toLocaleString("en-GB"),
+  new Date().toLocaleString(
+    "en-GB",
+    {
+      day:"numeric",
+      month:"long",
+      year:"numeric",
+      hour:"numeric",
+      minute:"2-digit"
+    }
+  ),
 
           week:
             Number(currentWeek)
