@@ -417,7 +417,7 @@ input:focus{
 
 <div class="container">
 
-<h1> Aylesbury HSS SHakha </h1>
+<h1> Aylesbury HSS </h1>
 
 <div class="subtitle">
 Quick Family Registration
@@ -856,7 +856,6 @@ function successPulse(){
   });
 
 }
-
 function checkIn(){
 
   const name =
@@ -887,7 +886,7 @@ function checkIn(){
     document.getElementById("checkinBtn");
 
   const ukPhoneRegex =
-    /+44;
+    /^(\+44|0)7\d{9}$/;
 
   msg.className = "";
 
@@ -916,6 +915,171 @@ function checkIn(){
     return;
 
   }
+
+  btn.disabled = true;
+
+  btn.innerHTML =
+    "⏳ Checking In...";
+
+  btn.style.opacity = ".75";
+
+  const currentWeek =
+    getWeekNumber();
+
+  fetch(API_URL)
+
+  .then(res=>res.json())
+
+  .then(data=>{
+
+    const alreadyExists =
+      data.some(row=>{
+
+        const existingPhone =
+          String(
+            row.emergency_contact || ""
+          ).replace(/\D/g,'');
+
+        const existingWeek =
+          Number(row.week);
+
+        return (
+          existingPhone === cleanedPhone &&
+          existingWeek === currentWeek
+        );
+
+      });
+
+    if(alreadyExists){
+
+      msg.innerHTML =
+        "⚠️ Already checked in this week";
+
+      msg.classList.add("error");
+
+      btn.disabled = false;
+
+      btn.innerHTML = "Check In";
+
+      btn.style.opacity = "1";
+
+      shakeCard();
+
+      return;
+
+    }
+
+    localStorage.setItem(
+      "name",
+      name
+    );
+
+    localStorage.setItem(
+      "email",
+      email
+    );
+
+    localStorage.setItem(
+      "phone",
+      normalizedPhone
+    );
+
+    fetch(API_URL,{
+
+      method:"POST",
+
+      headers:{
+        "Content-Type":"application/json"
+      },
+
+      body:JSON.stringify({
+
+        data:[{
+
+          name:name,
+
+          email:email,
+
+          emergency_contact:
+            normalizedPhone,
+
+          adults:
+            Number(adultCount),
+
+          children:
+            Number(childCount),
+
+          total:
+            Number(
+              adultCount + childCount
+            ),
+
+          time:
+            new Date().toLocaleString(
+              "en-GB",
+              {
+                day:"numeric",
+                month:"long",
+                year:"numeric",
+                hour:"numeric",
+                minute:"2-digit"
+              }
+            ),
+
+          week:
+            Number(currentWeek)
+
+        }]
+
+      })
+
+    })
+
+    .then(()=>{
+
+      msg.innerHTML =
+        "✅ Successfully Checked In";
+
+      msg.classList.add("success");
+
+      adultCount = 1;
+
+      childCount = 0;
+
+      updateCounters();
+
+      btn.disabled = false;
+
+      btn.innerHTML = "Check In";
+
+      btn.style.opacity = "1";
+
+      successPulse();
+
+      loadStats();
+
+    })
+
+    .catch(()=>{
+
+      msg.innerHTML =
+        "❌ Error submitting";
+
+      msg.classList.add("error");
+
+      btn.disabled = false;
+
+      btn.innerHTML = "Check In";
+
+      btn.style.opacity = "1";
+
+      shakeCard();
+
+    });
+
+  });
+
+}
 
   btn.disabled = true;
 
