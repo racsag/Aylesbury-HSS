@@ -1,12 +1,26 @@
 <!DOCTYPE html>
 <html lang="en-GB">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Event Check-In</title>
 
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#ffffff">
+<head>
+
+<meta charset="UTF-8" />
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+/>
+
+<title> Aylesbury HSS Shakha </title>
+
+<link
+  rel="manifest"
+  href="manifest.json"
+/>
+
+<meta
+  name="theme-color"
+  content="#ffffff"
+/>
 
 <style>
 
@@ -16,29 +30,35 @@
 }
 
 body{
+
   margin:0;
   padding:20px;
   min-height:100vh;
+
   background:
     linear-gradient(
       180deg,
       #f8f9ff 0%,
       #eef2ff 100%
     );
+
   font-family:
     -apple-system,
     BlinkMacSystemFont,
     "SF Pro Display",
     sans-serif;
+
   color:#111827;
 }
 
 .container{
+
   max-width:480px;
   margin:auto;
 }
 
 h1{
+
   text-align:center;
   font-size:40px;
   margin-bottom:6px;
@@ -46,28 +66,36 @@ h1{
 }
 
 .subtitle{
+
   text-align:center;
   color:#6b7280;
   margin-bottom:26px;
-  font-size:16px;
 }
 
 .card{
+
   background:
     rgba(255,255,255,0.82);
+
   backdrop-filter:blur(18px);
+
   border-radius:34px;
+
   padding:24px;
+
   box-shadow:
     0 10px 40px rgba(0,0,0,0.08);
+
   animation:fadeUp .6s ease;
 }
 
 @keyframes fadeUp{
+
   from{
     opacity:0;
     transform:translateY(20px);
   }
+
   to{
     opacity:1;
     transform:translateY(0);
@@ -75,58 +103,75 @@ h1{
 }
 
 input{
+
   width:100%;
+
   padding:18px;
+
   margin-bottom:14px;
+
   border-radius:22px;
+
   border:1px solid #e5e7eb;
+
   background:
     rgba(255,255,255,0.92);
+
   font-size:16px;
+
   outline:none;
+
   transition:.25s ease;
 }
 
 input:focus{
+
   border-color:#007AFF;
+
   box-shadow:
     0 0 0 4px rgba(0,122,255,0.12);
+
   transform:translateY(-1px);
 }
 
 .counter-section{
+
   display:flex;
   gap:14px;
   margin-top:22px;
 }
 
 .counter-box{
+
   flex:1;
+
   background:
     rgba(248,250,252,0.9);
-  border-radius:28px;
-  padding:20px;
-  text-align:center;
-  transition:.25s ease;
-}
 
-.counter-box:hover{
-  transform:translateY(-2px);
+  border-radius:28px;
+
+  padding:20px;
+
+  text-align:center;
 }
 
 .counter-title{
+
   color:#6b7280;
-  font-size:15px;
+
   margin-bottom:10px;
+
   font-weight:600;
 }
 
 .counter-value{
+
   font-size:42px;
   font-weight:700;
 }
 
 .counter-buttons{
+
   display:flex;
   justify-content:center;
   gap:12px;
@@ -134,163 +179,238 @@ input:focus{
 }
 
 .circle-btn{
+
   width:48px;
   height:48px;
+
   border:none;
+
   border-radius:50%;
+
   background:#007AFF;
+
   color:white;
+
   font-size:24px;
+
   cursor:pointer;
+
   transition:all .18s ease;
+
   box-shadow:
     0 6px 14px rgba(0,122,255,0.25);
 }
 
 .circle-btn:active{
+
   transform:scale(.92);
 }
 
 .circle-btn.clicked{
+
   background:#34C759;
 }
 
 .checkin-btn{
+
   width:100%;
+
   margin-top:26px;
+
   padding:18px;
+
   border:none;
+
   border-radius:24px;
+
   background:
     linear-gradient(
       135deg,
       #007AFF,
       #5E5CE6
     );
+
   color:white;
+
   font-size:18px;
+
   font-weight:700;
+
   cursor:pointer;
+
   transition:.22s ease;
+
   box-shadow:
     0 12px 24px rgba(0,122,255,0.24);
 }
 
-.checkin-btn:hover{
-  transform:translateY(-2px);
-}
-
 .checkin-btn:active{
+
   transform:scale(.98);
 }
 
-.checkin-btn.loading{
-  opacity:.7;
-}
-
 .admin-btn{
+
   width:100%;
+
   margin-top:18px;
+
   padding:16px;
+
   border:none;
+
   border-radius:22px;
+
   background:white;
-  color:#111827;
+
   font-size:15px;
+
   font-weight:700;
+
   cursor:pointer;
-  transition:.2s ease;
+
   box-shadow:
     0 6px 20px rgba(0,0,0,0.06);
 }
 
-.admin-btn:hover{
-  transform:translateY(-2px);
-}
-
 #msg{
+
   margin-top:16px;
+
   text-align:center;
+
   font-weight:600;
+
   min-height:20px;
 }
 
 .success{
+
   color:#16a34a;
 }
 
 .error{
+
   color:#dc2626;
 }
 
+.privacy-note{
+
+  margin-top:18px;
+
+  padding:14px;
+
+  border-radius:18px;
+
+  background:
+    rgba(248,250,252,0.9);
+
+  color:#6b7280;
+
+  font-size:13px;
+
+  line-height:1.5;
+
+  text-align:left;
+}
+
 #adminPanel{
+
   display:none;
+
   margin-top:24px;
+
   animation:fadeUp .4s ease;
 }
 
 .stats{
+
   display:flex;
+
   gap:12px;
 }
 
 .stat-box{
+
   flex:1;
+
   background:
     rgba(255,255,255,0.9);
+
   border-radius:24px;
+
   padding:18px;
+
   text-align:center;
+
   box-shadow:
     0 6px 24px rgba(0,0,0,0.06);
 }
 
 .stat-title{
+
   color:#6b7280;
   font-size:14px;
 }
 
 .stat-number{
+
   font-size:34px;
+
   font-weight:700;
+
   margin-top:8px;
 }
 
 .attendees{
+
   margin-top:20px;
+
   background:
     rgba(255,255,255,0.9);
+
   border-radius:28px;
+
   padding:18px;
+
   box-shadow:
     0 6px 24px rgba(0,0,0,0.06);
 }
 
 .attendees h2{
+
   margin-top:0;
-  font-size:22px;
 }
 
 .attendee-item{
+
   padding:14px 0;
-  border-bottom:1px solid #f1f5f9;
+
+  border-bottom:
+    1px solid #f1f5f9;
 }
 
 .attendee-item:last-child{
+
   border-bottom:none;
 }
 
 .attendee-name{
+
   font-weight:700;
 }
 
 .attendee-meta{
+
   color:#6b7280;
+
   font-size:14px;
+
   margin-top:4px;
 }
 
 </style>
+
 </head>
 
 <body>
@@ -309,19 +429,19 @@ Quick Family Registration
   type="text"
   id="name"
   placeholder="Full Name"
->
+/>
 
 <input
   type="email"
   id="email"
   placeholder="Email Address (Optional)"
->
+/>
 
 <input
   type="tel"
   id="phone"
   placeholder="UK Mobile Number"
->
+/>
 
 <div class="counter-section">
 
@@ -355,6 +475,7 @@ Adults
 </button>
 
 </div>
+
 </div>
 
 <div class="counter-box">
@@ -387,7 +508,22 @@ Children
 </button>
 
 </div>
+
 </div>
+
+</div>
+
+<div class="privacy-note">
+
+By checking in, you consent to your
+information being securely stored for
+event attendance, safeguarding and
+emergency contact purposes only.
+
+Your data will not be shared with
+third parties and may be removed
+upon request.
+
 </div>
 
 <button
@@ -414,18 +550,48 @@ Open Admin Dashboard
 <div class="stats">
 
 <div class="stat-box">
-<div class="stat-title">Total</div>
-<div class="stat-number" id="total">0</div>
+
+<div class="stat-title">
+Total
+</div>
+
+<div
+  class="stat-number"
+  id="total"
+>
+0
+</div>
+
 </div>
 
 <div class="stat-box">
-<div class="stat-title">Adults</div>
-<div class="stat-number" id="adults">0</div>
+
+<div class="stat-title">
+Adults
+</div>
+
+<div
+  class="stat-number"
+  id="adults"
+>
+0
+</div>
+
 </div>
 
 <div class="stat-box">
-<div class="stat-title">Kids</div>
-<div class="stat-number" id="children">0</div>
+
+<div class="stat-title">
+Kids
+</div>
+
+<div
+  class="stat-number"
+  id="children"
+>
+0
+</div>
+
 </div>
 
 </div>
@@ -470,7 +636,9 @@ function flashButton(button){
   button.classList.add("clicked");
 
   setTimeout(()=>{
+
     button.classList.remove("clicked");
+
   },220);
 
 }
@@ -494,6 +662,7 @@ function changeAdults(value,button){
   adultCount += value;
 
   if(adultCount < 1){
+
     adultCount = 1;
   }
 
@@ -508,6 +677,7 @@ function changeChildren(value,button){
   childCount += value;
 
   if(childCount < 0){
+
     childCount = 0;
   }
 
@@ -544,7 +714,6 @@ function openAdmin(){
     alert("Wrong PIN");
 
     return;
-
   }
 
   document.getElementById(
@@ -584,6 +753,7 @@ function loadStats(){
           Number(row.total || 0);
 
         return `
+
           <div class="attendee-item">
 
             <div class="attendee-name">
@@ -591,6 +761,7 @@ function loadStats(){
             </div>
 
             <div class="attendee-meta">
+
               👨 Adults:
               ${row.adults || 0}
 
@@ -603,6 +774,7 @@ function loadStats(){
 
               👥 Total:
               ${row.total || 0}
+
             </div>
 
             <div class="attendee-meta">
@@ -614,6 +786,7 @@ function loadStats(){
             </div>
 
           </div>
+
         `;
 
       }).join("");
@@ -638,33 +811,80 @@ function loadStats(){
 
 }
 
-function checkIn(){
+function shakeCard(){
 
-  const name =
-    document.getElementById(
-      "name"
-    ).value.trim();
+  const card =
+    document.querySelector(".card");
 
-  const email =
-    document.getElementById(
-      "email"
-    ).value.trim().toLowerCase();
+  card.animate([
 
-  const phone =
-    document.getElementById(
-      "phone"
-    ).value.trim();
+    {transform:'translateX(0px)'},
 
-  const cleanedPhone =
-    phone.replace(/\s+/g,'');
+    {transform:'translateX(-6px)'},
 
-  const msg =
-    document.getElementById("msg");
+    {transform:'translateX(6px)'},
+
+    {transform:'translateX(0px)'}
+
+  ],{
+
+    duration:300
+
+  });
+
+}
+
+function successPulse(){
 
   const btn =
     document.getElementById(
       "checkinBtn"
     );
+
+  btn.animate([
+
+    {transform:'scale(1)'},
+
+    {transform:'scale(1.04)'},
+
+    {transform:'scale(1)'}
+
+  ],{
+
+    duration:350
+
+  });
+
+}
+
+function checkIn(){
+
+  const name =
+    document.getElementById("name")
+    .value.trim();
+
+  const email =
+    document.getElementById("email")
+    .value.trim()
+    .toLowerCase();
+
+  const phone =
+    document.getElementById("phone")
+    .value.trim();
+
+  const cleanedPhone =
+    phone.replace(/\D/g,'');
+
+  const normalizedPhone =
+    cleanedPhone.startsWith("44")
+    ? "+" + cleanedPhone
+    : cleanedPhone;
+
+  const msg =
+    document.getElementById("msg");
+
+  const btn =
+    document.getElementById("checkinBtn");
 
   const ukPhoneRegex =
     /^(\+44|0)7\d{9}$/;
@@ -673,21 +893,25 @@ function checkIn(){
 
   if(!name || !phone){
 
-    msg.innerText =
-      "Name and UK mobile number are required";
+    msg.innerHTML =
+      "⚠️ Name and mobile number required";
 
     msg.classList.add("error");
+
+    shakeCard();
 
     return;
 
   }
 
-  if(!ukPhoneRegex.test(cleanedPhone)){
+  if(!ukPhoneRegex.test(normalizedPhone)){
 
-    msg.innerText =
-      "Enter valid UK mobile number";
+    msg.innerHTML =
+      "⚠️ Enter valid UK mobile number";
 
     msg.classList.add("error");
+
+    shakeCard();
 
     return;
 
@@ -695,9 +919,10 @@ function checkIn(){
 
   btn.disabled = true;
 
-  btn.classList.add("loading");
+  btn.innerHTML =
+    "⏳ Checking In...";
 
-  btn.innerText = "Checking In...";
+  btn.style.opacity = ".75";
 
   const currentWeek =
     getWeekNumber();
@@ -711,36 +936,54 @@ function checkIn(){
     const alreadyExists =
       data.some(row=>{
 
-        const sameWeek =
-          Number(row.week) === currentWeek;
+        const existingPhone =
+          String(
+            row.emergency_contact || ""
+          ).replace(/\D/g,'');
 
-        const samePhone =
-          row.emergency_contact === cleanedPhone;
+        const existingWeek =
+          Number(row.week);
 
-        return sameWeek && samePhone;
+        return (
+          existingPhone === cleanedPhone &&
+          existingWeek === currentWeek
+        );
 
       });
 
     if(alreadyExists){
 
-      msg.innerText =
-        "Already checked in this week";
+      msg.innerHTML =
+        "⚠️ Already checked in this week";
 
       msg.classList.add("error");
 
       btn.disabled = false;
 
-      btn.classList.remove("loading");
+      btn.innerHTML = "Check In";
 
-      btn.innerText = "Check In";
+      btn.style.opacity = "1";
+
+      shakeCard();
 
       return;
 
     }
 
-    localStorage.setItem("name",name);
-    localStorage.setItem("email",email);
-    localStorage.setItem("phone",cleanedPhone);
+    localStorage.setItem(
+      "name",
+      name
+    );
+
+    localStorage.setItem(
+      "email",
+      email
+    );
+
+    localStorage.setItem(
+      "phone",
+      normalizedPhone
+    );
 
     fetch(API_URL,{
 
@@ -758,21 +1001,26 @@ function checkIn(){
 
           email:email,
 
-          emergency_contact:cleanedPhone,
+          emergency_contact:
+            normalizedPhone,
 
-          adults:Number(adultCount),
+          adults:
+            Number(adultCount),
 
-          children:Number(childCount),
+          children:
+            Number(childCount),
 
           total:
-            Number(adultCount + childCount),
-
-          time:
-            new Date().toLocaleString(
-              "en-GB"
+            Number(
+              adultCount + childCount
             ),
 
-          week:Number(currentWeek)
+          time:
+            new Date()
+            .toLocaleString("en-GB"),
+
+          week:
+            Number(currentWeek)
 
         }]
 
@@ -782,21 +1030,24 @@ function checkIn(){
 
     .then(()=>{
 
-      msg.innerText =
-        `Checked in successfully for ${adultCount} adult(s) and ${childCount} child(ren)`;
+      msg.innerHTML =
+        "✅ Successfully Checked In";
 
       msg.classList.add("success");
 
       adultCount = 1;
+
       childCount = 0;
 
       updateCounters();
 
       btn.disabled = false;
 
-      btn.classList.remove("loading");
+      btn.innerHTML = "Check In";
 
-      btn.innerText = "Check In";
+      btn.style.opacity = "1";
+
+      successPulse();
 
       loadStats();
 
@@ -804,16 +1055,18 @@ function checkIn(){
 
     .catch(()=>{
 
-      msg.innerText =
-        "Error submitting";
+      msg.innerHTML =
+        "❌ Error submitting";
 
       msg.classList.add("error");
 
       btn.disabled = false;
 
-      btn.classList.remove("loading");
+      btn.innerHTML = "Check In";
 
-      btn.innerText = "Check In";
+      btn.style.opacity = "1";
+
+      shakeCard();
 
     });
 
