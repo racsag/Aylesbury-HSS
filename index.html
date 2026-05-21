@@ -1,122 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Event Check-In</title>
 
 <style>
-* {
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-}
-
-body {
-  min-height:100vh;
+body{
+  font-family: Arial, sans-serif;
+  background:#0f172a;
+  color:#fff;
   display:flex;
-  align-items:center;
   justify-content:center;
-  background: radial-gradient(circle at top, #0f172a, #020617);
-  padding:20px;
+  align-items:center;
+  height:100vh;
+  margin:0;
 }
 
-/* CARD */
-.container {
+.container{
+  background:#111827;
+  padding:25px;
+  border-radius:16px;
+  width:320px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.4);
+}
+
+h2{text-align:center;}
+
+input{
   width:100%;
-  max-width:420px;
-  background: rgba(255,255,255,0.92);
-  backdrop-filter: blur(20px);
-  border-radius:24px;
-  padding:26px;
-  box-shadow: 0 25px 70px rgba(0,0,0,0.35);
+  padding:10px;
+  margin:8px 0;
+  border-radius:8px;
+  border:none;
 }
 
-/* HEADER */
-h1 {
-  text-align:center;
-  font-size:26px;
-  margin-bottom:6px;
-}
-
-.subtitle {
-  text-align:center;
-  font-size:13px;
-  color:#64748b;
-  margin-bottom:18px;
-}
-
-/* INPUTS */
-input {
-  width:100%;
-  padding:14px;
-  margin-bottom:10px;
-  border-radius:14px;
-  border:1px solid #e2e8f0;
-  background:#f8fafc;
-  outline:none;
-}
-
-input:focus {
-  border-color:#3b82f6;
-  box-shadow:0 0 0 4px rgba(59,130,246,0.15);
-  background:white;
-}
-
-/* COUNTERS */
-.counter {
+.counter{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin:14px 0;
-  padding:12px;
-  background:#f1f5f9;
-  border-radius:14px;
-}
-
-.counter button {
-  padding:6px 12px;
-  border:none;
-  border-radius:10px;
-  background:#3b82f6;
-  color:white;
-  font-size:16px;
-  cursor:pointer;
-}
-
-.counter span {
-  font-weight:700;
-  margin:0 10px;
-}
-
-/* STATUS */
-#msg {
-  text-align:center;
-  min-height:20px;
   margin:10px 0;
-  font-weight:600;
 }
 
-.loading { color:#2563eb; }
-.success { color:#16a34a; }
-.error { color:#dc2626; }
-
-/* BUTTON */
-.primary {
-  width:100%;
-  padding:16px;
-  border-radius:16px;
+button{
+  padding:8px 12px;
   border:none;
-  background:linear-gradient(135deg,#2563eb,#1e40af);
-  color:white;
-  font-weight:700;
-  font-size:15px;
+  border-radius:8px;
   cursor:pointer;
 }
 
-.primary:disabled {
-  opacity:0.6;
+.add{background:#22c55e;color:#000;}
+.sub{background:#ef4444;color:#fff;}
+.checkin{width:100%;background:#3b82f6;color:#fff;margin-top:10px;}
+.adminBtn{width:100%;margin-top:10px;background:#f59e0b;}
+
+.status{
+  text-align:center;
+  margin-top:10px;
+  font-weight:bold;
+}
+
+.small{
+  font-size:12px;
+  opacity:0.7;
+  text-align:center;
+  margin-top:5px;
+}
+
+.modal{
+  position:fixed;
+  top:0;left:0;
+  width:100%;height:100%;
+  background:rgba(0,0,0,0.7);
+  display:none;
+  justify-content:center;
+  align-items:center;
+}
+
+.modal-content{
+  background:#1f2937;
+  padding:20px;
+  border-radius:12px;
+  width:280px;
 }
 </style>
 </head>
@@ -124,135 +89,132 @@ input:focus {
 <body>
 
 <div class="container">
+  <h2>Event Check-In</h2>
 
-<h1>Event Check-In</h1>
-<p class="subtitle">Fast & simple registration</p>
+  <input id="name" placeholder="Name"/>
+  <input id="phone" placeholder="Phone Number"/>
 
-<input id="name" placeholder="Full Name" required>
-<input id="email" placeholder="Email (optional)">
-<input id="phone" placeholder="Phone (optional)">
-
-<!-- COUNTERS -->
-<div class="counter">
-  <div>👤 Adults</div>
-  <div>
-    <button type="button" onclick="changeAdults(-1)">-</button>
-    <span id="adultCount">0</span>
-    <button type="button" onclick="changeAdults(1)">+</button>
+  <div class="counter">
+    Adults:
+    <div>
+      <button class="sub" onclick="change('adults',-1)">-</button>
+      <span id="adults">0</span>
+      <button class="add" onclick="change('adults',1)">+</button>
+    </div>
   </div>
+
+  <div class="counter">
+    Children:
+    <div>
+      <button class="sub" onclick="change('children',-1)">-</button>
+      <span id="children">0</span>
+      <button class="add" onclick="change('children',1)">+</button>
+    </div>
+  </div>
+
+  <button class="checkin" onclick="checkIn()">Check In</button>
+  <button class="adminBtn" onclick="openAdmin()">Admin</button>
+
+  <div class="status" id="status"></div>
+  <div class="small">Privacy mode: details clear after registration</div>
 </div>
 
-<div class="counter">
-  <div>👶 Children</div>
-  <div>
-    <button type="button" onclick="changeChildren(-1)">-</button>
-    <span id="childCount">0</span>
-    <button type="button" onclick="changeChildren(1)">+</button>
+<!-- ADMIN MODAL -->
+<div class="modal" id="adminModal">
+  <div class="modal-content">
+    <h3>Admin Login</h3>
+    <input id="adminPass" placeholder="Enter password"/>
+    <button class="checkin" onclick="loginAdmin()">Login</button>
+
+    <div id="adminPanel" style="display:none;margin-top:10px;">
+      <h4>Summary</h4>
+      <div id="summary"></div>
+    </div>
   </div>
-</div>
-
-<div id="msg"></div>
-
-<button class="primary" id="btn" onclick="checkIn()">
-Register
-</button>
-
 </div>
 
 <script>
-const API_URL="https://sheetdb.io/api/v1/a0rzdx90pgkp5";
+let adults = 0;
+let children = 0;
 
-let selectedAdults=0;
-let selectedChildren=0;
+let data = JSON.parse(localStorage.getItem("checkins") || "[]");
 
-/* COUNTERS */
-function changeAdults(v){
-  selectedAdults=Math.max(0,selectedAdults+v);
-  document.getElementById("adultCount").innerText=selectedAdults;
+function change(type,val){
+  if(type==="adults"){
+    adults = Math.max(0, adults + val);
+    document.getElementById("adults").innerText = adults;
+  }
+  if(type==="children"){
+    children = Math.max(0, children + val);
+    document.getElementById("children").innerText = children;
+  }
 }
 
-function changeChildren(v){
-  selectedChildren=Math.max(0,selectedChildren+v);
-  document.getElementById("childCount").innerText=selectedChildren;
+function setStatus(msg){
+  document.getElementById("status").innerText = msg;
 }
 
-/* MESSAGE */
-function setMsg(text,type){
-  const msg=document.getElementById("msg");
-  msg.innerText=text;
-  msg.className=type;
-}
+function checkIn(){
+  const name = document.getElementById("name").value.trim();
+  const phone = document.getElementById("phone").value.trim();
 
-/* DUPLICATE CHECK */
-async function isDuplicate(email){
-  const res=await fetch(API_URL);
-  const data=await res.json();
-
-  return data.some(r =>
-    email &&
-    r.email &&
-    r.email.toLowerCase() === email.toLowerCase()
-  );
-}
-
-/* CHECK-IN */
-async function checkIn(){
-
-  const name=document.getElementById("name").value.trim();
-  const email=document.getElementById("email").value.trim();
-  const phone=document.getElementById("phone").value.trim();
-
-  if(!name){
-    setMsg("Please enter name","error");
+  if(!name || !phone){
+    setStatus("Please fill details");
     return;
   }
 
-  setMsg("Registering...","loading");
-  document.getElementById("btn").disabled=true;
+  let existing = data.find(p => p.phone === phone);
 
-  const duplicate=await isDuplicate(email);
-
-  if(duplicate){
-    setMsg("Already registered","error");
-    document.getElementById("btn").disabled=false;
+  if(existing){
+    setStatus("Already registered");
     return;
   }
 
-  try {
-    await fetch(API_URL,{
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify({
-        data:[{
-          name,
-          email,
-          phone,
-          adults:selectedAdults,
-          children:selectedChildren,
-          time:new Date().toISOString()
-        }]
-      })
-    });
+  setStatus("Registering...");
 
-    setMsg("Successfully registered","success");
+  setTimeout(()=>{
+    data.push({name, phone, adults, children});
+    localStorage.setItem("checkins", JSON.stringify(data));
 
-    localStorage.setItem("name",name);
-    localStorage.setItem("email",email);
-    localStorage.setItem("phone",phone);
+    setStatus("Registered ✔️");
 
-  } catch(e){
-    setMsg("Error occurred","error");
-  }
+    // privacy reset
+    setTimeout(()=>{
+      document.getElementById("name").value="";
+      document.getElementById("phone").value="";
+      adults=0;
+      children=0;
+      document.getElementById("adults").innerText=0;
+      document.getElementById("children").innerText=0;
+      setStatus("");
+    },2000);
 
-  document.getElementById("btn").disabled=false;
+  },1000);
 }
 
-/* AUTO FILL */
-window.onload=()=>{
-  document.getElementById("name").value=localStorage.getItem("name")||"";
-  document.getElementById("email").value=localStorage.getItem("email")||"";
-  document.getElementById("phone").value=localStorage.getItem("phone")||"";
-};
+function openAdmin(){
+  document.getElementById("adminModal").style.display="flex";
+}
+
+function loginAdmin(){
+  const pass = document.getElementById("adminPass").value;
+
+  if(pass !== "1234"){
+    alert("Wrong password");
+    return;
+  }
+
+  document.getElementById("adminPanel").style.display="block";
+
+  let totalAdults = data.reduce((a,b)=>a+b.adults,0);
+  let totalChildren = data.reduce((a,b)=>a+b.children,0);
+
+  document.getElementById("summary").innerHTML = `
+    Total Registrations: ${data.length}<br>
+    Adults: ${totalAdults}<br>
+    Children: ${totalChildren}
+  `;
+}
 </script>
 
 </body>
