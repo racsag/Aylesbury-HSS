@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title> Aylesbury HSS </title>
+<title>Event Check-In</title>
 
 <style>
 * {
@@ -20,25 +20,23 @@ body {
   justify-content:center;
   background: radial-gradient(circle at top, #0f172a, #020617);
   padding:20px;
-  color:#0f172a;
 }
 
-/* APP CARD */
+/* CARD */
 .container {
   width:100%;
   max-width:420px;
-  background: rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.92);
   backdrop-filter: blur(20px);
   border-radius:24px;
-  padding:28px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  padding:26px;
+  box-shadow: 0 25px 70px rgba(0,0,0,0.35);
 }
 
 /* HEADER */
 h1 {
   text-align:center;
   font-size:26px;
-  font-weight:800;
   margin-bottom:6px;
 }
 
@@ -46,7 +44,7 @@ h1 {
   text-align:center;
   font-size:13px;
   color:#64748b;
-  margin-bottom:20px;
+  margin-bottom:18px;
 }
 
 /* INPUTS */
@@ -58,7 +56,6 @@ input {
   border:1px solid #e2e8f0;
   background:#f8fafc;
   outline:none;
-  transition:0.2s;
 }
 
 input:focus {
@@ -67,54 +64,45 @@ input:focus {
   background:white;
 }
 
-/* GROUP GRID */
-.grid {
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  margin:12px 0 18px;
+/* COUNTERS */
+.counter {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin:14px 0;
+  padding:12px;
+  background:#f1f5f9;
+  border-radius:14px;
 }
 
-.btn {
-  padding:14px;
-  border-radius:14px;
+.counter button {
+  padding:6px 12px;
   border:none;
+  border-radius:10px;
   background:#3b82f6;
   color:white;
-  font-weight:600;
+  font-size:16px;
   cursor:pointer;
-  transition:0.2s;
 }
 
-.btn:hover {
-  transform:translateY(-2px);
-}
-
-.btn.active {
-  background:#1e40af;
+.counter span {
+  font-weight:700;
+  margin:0 10px;
 }
 
 /* STATUS */
 #msg {
   text-align:center;
-  font-weight:600;
-  margin:10px 0;
   min-height:20px;
+  margin:10px 0;
+  font-weight:600;
 }
 
-.loading {
-  color:#2563eb;
-}
+.loading { color:#2563eb; }
+.success { color:#16a34a; }
+.error { color:#dc2626; }
 
-.success {
-  color:#16a34a;
-}
-
-.error {
-  color:#dc2626;
-}
-
-/* PRIMARY BUTTON */
+/* BUTTON */
 .primary {
   width:100%;
   padding:16px;
@@ -125,12 +113,10 @@ input:focus {
   font-weight:700;
   font-size:15px;
   cursor:pointer;
-  transition:0.2s;
 }
 
 .primary:disabled {
   opacity:0.6;
-  cursor:not-allowed;
 }
 </style>
 </head>
@@ -139,25 +125,35 @@ input:focus {
 
 <div class="container">
 
-<h1>HSS Shakha </h1>
-<p class="subtitle">Fast & secure registration</p>
+<h1>Event Check-In</h1>
+<p class="subtitle">Fast & simple registration</p>
 
 <input id="name" placeholder="Full Name" required>
 <input id="email" placeholder="Email (optional)">
 <input id="phone" placeholder="Phone (optional)">
 
-<div class="grid">
-<button class="btn" onclick="selectGroup(event,0,0)">0A + 0C</button>
-<button class="btn" onclick="selectGroup(event,1,0)">1 Adult</button>
-<button class="btn" onclick="selectGroup(event,2,0)">2 Adults</button>
-<button class="btn" onclick="selectGroup(event,1,1)">1A + 1C</button>
-<button class="btn" onclick="selectGroup(event,2,1)">2A + 1C</button>
-<button class="btn" onclick="selectGroup(event,1,2)">1A + 2C</button>
+<!-- COUNTERS -->
+<div class="counter">
+  <div>👤 Adults</div>
+  <div>
+    <button type="button" onclick="changeAdults(-1)">-</button>
+    <span id="adultCount">0</span>
+    <button type="button" onclick="changeAdults(1)">+</button>
+  </div>
+</div>
+
+<div class="counter">
+  <div>👶 Children</div>
+  <div>
+    <button type="button" onclick="changeChildren(-1)">-</button>
+    <span id="childCount">0</span>
+    <button type="button" onclick="changeChildren(1)">+</button>
+  </div>
 </div>
 
 <div id="msg"></div>
 
-<button class="primary" onclick="checkIn()" id="submitBtn">
+<button class="primary" id="btn" onclick="checkIn()">
 Register
 </button>
 
@@ -169,23 +165,25 @@ const API_URL="https://sheetdb.io/api/v1/a0rzdx90pgkp5";
 let selectedAdults=0;
 let selectedChildren=0;
 
-/* GROUP SELECT */
-function selectGroup(e,a,c){
-  selectedAdults=a;
-  selectedChildren=c;
-
-  document.querySelectorAll(".btn").forEach(b=>b.classList.remove("active"));
-  e.target.classList.add("active");
+/* COUNTERS */
+function changeAdults(v){
+  selectedAdults=Math.max(0,selectedAdults+v);
+  document.getElementById("adultCount").innerText=selectedAdults;
 }
 
-/* MESSAGE UI */
+function changeChildren(v){
+  selectedChildren=Math.max(0,selectedChildren+v);
+  document.getElementById("childCount").innerText=selectedChildren;
+}
+
+/* MESSAGE */
 function setMsg(text,type){
   const msg=document.getElementById("msg");
   msg.innerText=text;
   msg.className=type;
 }
 
-/* CHECK DUPLICATE */
+/* DUPLICATE CHECK */
 async function isDuplicate(email){
   const res=await fetch(API_URL);
   const data=await res.json();
@@ -197,12 +195,12 @@ async function isDuplicate(email){
   );
 }
 
-/* CHECK IN */
+/* CHECK-IN */
 async function checkIn(){
 
-  const name=nameInput.value.trim();
-  const email=emailInput.value.trim();
-  const phone=phoneInput.value.trim();
+  const name=document.getElementById("name").value.trim();
+  const email=document.getElementById("email").value.trim();
+  const phone=document.getElementById("phone").value.trim();
 
   if(!name){
     setMsg("Please enter name","error");
@@ -210,14 +208,13 @@ async function checkIn(){
   }
 
   setMsg("Registering...","loading");
-  document.getElementById("submitBtn").disabled=true;
+  document.getElementById("btn").disabled=true;
 
-  // DUPLICATE CHECK
   const duplicate=await isDuplicate(email);
 
   if(duplicate){
     setMsg("Already registered","error");
-    document.getElementById("submitBtn").disabled=false;
+    document.getElementById("btn").disabled=false;
     return;
   }
 
@@ -243,22 +240,18 @@ async function checkIn(){
     localStorage.setItem("email",email);
     localStorage.setItem("phone",phone);
 
-  } catch(err){
+  } catch(e){
     setMsg("Error occurred","error");
   }
 
-  document.getElementById("submitBtn").disabled=false;
+  document.getElementById("btn").disabled=false;
 }
 
 /* AUTO FILL */
-const nameInput=document.getElementById("name");
-const emailInput=document.getElementById("email");
-const phoneInput=document.getElementById("phone");
-
 window.onload=()=>{
-  nameInput.value=localStorage.getItem("name")||"";
-  emailInput.value=localStorage.getItem("email")||"";
-  phoneInput.value=localStorage.getItem("phone")||"";
+  document.getElementById("name").value=localStorage.getItem("name")||"";
+  document.getElementById("email").value=localStorage.getItem("email")||"";
+  document.getElementById("phone").value=localStorage.getItem("phone")||"";
 };
 </script>
 
