@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> Aylesbury HSS </title>
+
+<style>
+body{
+  font-family: Arial;
+  background:#0f172a;
+  color:white;
+  display:flex;
+  justify-content:center;
+  align-items:center; 
+  height:100vh;
+  margin:0;
+}
+
+.container{
+  width:340px;
+  background:#111827;
+  padding:20px;
+  border-radius:16px;
+}
+
+input{
+  width:100%;
+  padding:10px;
+  margin:6px 0;
+  border-radius:8px;
+  border:none;
+}
+
+button{
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.primary{background:#6366f1;color:white;}
+.counter{
+  display:flex;
+  justify-content:space-between;
+  margin:10px 0;
+}
+.small{font-size:12px;opacity:0.7;margin-top:10px;}
+.status{text-align:center;margin-top:10px;}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2> Aylesbury HSS </h2>
+
+<input id="name" placeholder="Name">
+<input id="phone" placeholder="Phone">
+<input id="email" placeholder="Email (optional)">
+
+<div class="counter">
+  Adults:
+  <div>
+    <button onclick="change('adults',-1)">-</button>
+    <span id="adults">0</span>
+    <button onclick="change('adults',1)">+</button>
+  </div>
+</div>
+
+<div class="counter">
+  Children:
+  <div>
+    <button onclick="change('children',-1)">-</button>
+    <span id="children">0</span>
+    <button onclick="change('children',1)">+</button>
+  </div>
+</div>
+
+<label style="font-size:12px;">
+<input type="checkbox" id="consent"> I agree to GDPR & Data Privacy
+</label>
+
+<button class="primary" onclick="submitData()">Check In</button>
+
+<div class="status" id="status"></div>
+
+<div class="small">
+GDPR & Data Privacy: Data is stored securely in Google Sheets and used only for event management.
+</div>
+
+</div>
+
+<script>
+
+const API_URL = "https://sheetdb.io/api/v1/d2qwcelvfejm5";
+
+let adults = 0;
+let children = 0;
+
+function change(type,val){
+  if(type==="adults"){
+    adults = Math.max(0, adults + val);
+    document.getElementById("adults").innerText = adults;
+  }
+  if(type==="children"){
+    children = Math.max(0, children + val);
+    document.getElementById("children").innerText = children;
+  }
+}
+
+function setStatus(msg){
+  document.getElementById("status").innerText = msg;
+}
+
+async function submitData(){
+
+  const name = document.getElementById("name").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const consent = document.getElementById("consent").checked;
+
+  if(!name || !phone){
+    setStatus("Please fill required fields");
+    return;
+  }
+
+  if(!consent){
+    setStatus("Please accept GDPR consent");
+    return;
+  }
+
+  setStatus("Registering...");
+
+  try{
+
+    const res = await fetch(API_URL,{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({
+        data:[
+          {
+            name,
+            phone,
+            email: email || "",
+            adults,
+            children,
+            time:new Date().toLocaleString()
+          }
+        ]
+      })
+    });
+
+    if(res.ok){
+      setStatus("Registered ✔");
+
+      setTimeout(()=>{
+
+        document.getElementById("name").value="";
+        document.getElementById("phone").value="";
+        document.getElementById("email").value="";
+        document.getElementById("consent").checked=false;
+
+        adults=0;
+        children=0;
+
+        document.getElementById("adults").innerText=0;
+        document.getElementById("children").innerText=0;
+
+        setStatus("");
+
+      },2000);
+
+    } else {
+      setStatus("Failed to submit");
+    }
+
+  } catch(err){
+    console.log(err);
+    setStatus("Error connecting to sheet");
+  }
+}
+
+</script>
+
+</body>
+</html>
