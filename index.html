@@ -1,296 +1,265 @@
 <!DOCTYPE html>
-<html lang="en-GB">
-
+<html lang="en">
 <head>
-
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
-<title>Aylesbury HSS </title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> Aylesbury HSS </title>
 
 <style>
-
-body{
+* {
   margin:0;
-  padding:20px;
-  font-family:-apple-system,BlinkMacSystemFont,sans-serif;
-  background:linear-gradient(180deg,#f5f7ff,#eef2ff);
-  color:#111;
+  padding:0;
+  box-sizing:border-box;
+  font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-.container{
-  max-width:480px;
-  margin:auto;
-}
-
-h1{
-  text-align:center;
-  font-size:34px;
-}
-
-.card{
-  background:white;
-  border-radius:30px;
-  padding:20px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.08);
-}
-
-input{
-  width:100%;
-  padding:16px;
-  margin:10px 0;
-  border-radius:16px;
-  border:1px solid #ddd;
-  font-size:16px;
-}
-
-.counter-section{
+body {
+  min-height:100vh;
   display:flex;
-  gap:12px;
+  align-items:center;
+  justify-content:center;
+  background: radial-gradient(circle at top, #0f172a, #020617);
+  padding:20px;
+  color:#0f172a;
 }
 
-.counter-box{
-  flex:1;
-  background:#f6f7fb;
-  padding:15px;
-  border-radius:20px;
+/* APP CARD */
+.container {
+  width:100%;
+  max-width:420px;
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(20px);
+  border-radius:24px;
+  padding:28px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+/* HEADER */
+h1 {
   text-align:center;
+  font-size:26px;
+  font-weight:800;
+  margin-bottom:6px;
 }
 
-.counter-value{
-  font-size:32px;
-  font-weight:bold;
+.subtitle {
+  text-align:center;
+  font-size:13px;
+  color:#64748b;
+  margin-bottom:20px;
 }
 
-.circle-btn{
-  width:40px;
-  height:40px;
-  border-radius:50%;
+/* INPUTS */
+input {
+  width:100%;
+  padding:14px;
+  margin-bottom:10px;
+  border-radius:14px;
+  border:1px solid #e2e8f0;
+  background:#f8fafc;
+  outline:none;
+  transition:0.2s;
+}
+
+input:focus {
+  border-color:#3b82f6;
+  box-shadow:0 0 0 4px rgba(59,130,246,0.15);
+  background:white;
+}
+
+/* GROUP GRID */
+.grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin:12px 0 18px;
+}
+
+.btn {
+  padding:14px;
+  border-radius:14px;
   border:none;
-  background:#007AFF;
+  background:#3b82f6;
   color:white;
-  font-size:20px;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.2s;
 }
 
-.checkin-btn{
+.btn:hover {
+  transform:translateY(-2px);
+}
+
+.btn.active {
+  background:#1e40af;
+}
+
+/* STATUS */
+#msg {
+  text-align:center;
+  font-weight:600;
+  margin:10px 0;
+  min-height:20px;
+}
+
+.loading {
+  color:#2563eb;
+}
+
+.success {
+  color:#16a34a;
+}
+
+.error {
+  color:#dc2626;
+}
+
+/* PRIMARY BUTTON */
+.primary {
   width:100%;
   padding:16px;
-  margin-top:15px;
+  border-radius:16px;
   border:none;
-  border-radius:20px;
-  background:#007AFF;
+  background:linear-gradient(135deg,#2563eb,#1e40af);
   color:white;
-  font-size:18px;
+  font-weight:700;
+  font-size:15px;
+  cursor:pointer;
+  transition:0.2s;
 }
 
-#msg{
-  text-align:center;
-  margin-top:10px;
-  font-weight:bold;
+.primary:disabled {
+  opacity:0.6;
+  cursor:not-allowed;
 }
-
-.privacy{
-  font-size:12px;
-  color:#666;
-  margin-top:12px;
-  padding:10px;
-  background:#f7f7f7;
-  border-radius:12px;
-}
-
-.admin{
-  margin-top:15px;
-  background:white;
-  border-radius:20px;
-  padding:15px;
-}
-
 </style>
-
 </head>
 
 <body>
 
 <div class="container">
 
-<h1>Aylesbury HSS</h1>
+<h1>HSS Shakha </h1>
+<p class="subtitle">Fast & secure registration</p>
 
-<div class="card">
+<input id="name" placeholder="Full Name" required>
+<input id="email" placeholder="Email (optional)">
+<input id="phone" placeholder="Phone (optional)">
 
-<input id="name" placeholder="Full Name"/>
-<input id="email" placeholder="Email (optional)"/>
-<input id="phone" placeholder="UK Mobile Number"/>
-
-<div class="counter-section">
-
-<div class="counter-box">
-Adults
-<div class="counter-value" id="adultCount">1</div>
-
-<button class="circle-btn" onclick="changeAdults(-1)">−</button>
-<button class="circle-btn" onclick="changeAdults(1)">+</button>
-
+<div class="grid">
+<button class="btn" onclick="selectGroup(event,0,0)">0A + 0C</button>
+<button class="btn" onclick="selectGroup(event,1,0)">1 Adult</button>
+<button class="btn" onclick="selectGroup(event,2,0)">2 Adults</button>
+<button class="btn" onclick="selectGroup(event,1,1)">1A + 1C</button>
+<button class="btn" onclick="selectGroup(event,2,1)">2A + 1C</button>
+<button class="btn" onclick="selectGroup(event,1,2)">1A + 2C</button>
 </div>
-
-<div class="counter-box">
-Children
-<div class="counter-value" id="childCount">0</div>
-
-<button class="circle-btn" onclick="changeChildren(-1)">−</button>
-<button class="circle-btn" onclick="changeChildren(1)">+</button>
-</div>
-
-</div>
-
-<div class="privacy">
-By checking in, you agree your data is stored for event management and safety only (GDPR compliant).
-</div>
-
-<button class="checkin-btn" onclick="checkIn()">Check In</button>
 
 <div id="msg"></div>
 
-</div>
-
-<div class="admin">
-<button onclick="openAdmin()">Admin Dashboard</button>
-
-<div id="stats" style="display:none;margin-top:10px;">
-Total Adults: <span id="tAdults">0</span><br/>
-Total Children: <span id="tChildren">0</span><br/>
-Total People: <span id="tTotal">0</span>
-</div>
-
-</div>
+<button class="primary" onclick="checkIn()" id="submitBtn">
+Register
+</button>
 
 </div>
 
 <script>
+const API_URL="https://sheetdb.io/api/v1/a0rzdx90pgkp5";
 
-const API_URL="https://sheetdb.io/api/v1/ce2vzb2cgzonz";
-const ADMIN_PIN="1234";
+let selectedAdults=0;
+let selectedChildren=0;
 
-let adults=1;
-let children=0;
+/* GROUP SELECT */
+function selectGroup(e,a,c){
+  selectedAdults=a;
+  selectedChildren=c;
 
-/* COUNTERS FIXED */
-function changeAdults(v){
-  adults+=v;
-  if(adults<1) adults=1;
-  document.getElementById("adultCount").innerText=adults;
+  document.querySelectorAll(".btn").forEach(b=>b.classList.remove("active"));
+  e.target.classList.add("active");
 }
 
-function changeChildren(v){
-  children+=v;
-  if(children<0) children=0;
-  document.getElementById("childCount").innerText=children;
+/* MESSAGE UI */
+function setMsg(text,type){
+  const msg=document.getElementById("msg");
+  msg.innerText=text;
+  msg.className=type;
 }
 
-/* UK PHONE CLEAN */
-function cleanPhone(p){
-  return p.replace(/\D/g,'');
-}
+/* CHECK DUPLICATE */
+async function isDuplicate(email){
+  const res=await fetch(API_URL);
+  const data=await res.json();
 
-/* TIME FIX */
-function getTime(){
-  return new Date().toLocaleString("en-GB",{
-    day:"2-digit",
-    month:"long",
-    year:"numeric",
-    hour:"2-digit",
-    minute:"2-digit"
-  });
+  return data.some(r =>
+    email &&
+    r.email &&
+    r.email.toLowerCase() === email.toLowerCase()
+  );
 }
 
 /* CHECK IN */
-function checkIn(){
+async function checkIn(){
 
-  const name=document.getElementById("name").value.trim();
-  const email=document.getElementById("email").value.trim().toLowerCase();
-  const phone=document.getElementById("phone").value.trim();
+  const name=nameInput.value.trim();
+  const email=emailInput.value.trim();
+  const phone=phoneInput.value.trim();
 
-  const msg=document.getElementById("msg");
-
-  if(!name||!phone){
-    msg.innerText="Name & phone required";
+  if(!name){
+    setMsg("Please enter name","error");
     return;
   }
 
-  const cleaned=cleanPhone(phone);
+  setMsg("Registering...","loading");
+  document.getElementById("submitBtn").disabled=true;
 
-  if(!/^(\+44|0)7\d{9}$/.test(phone)){
-    msg.innerText="Invalid UK number";
+  // DUPLICATE CHECK
+  const duplicate=await isDuplicate(email);
+
+  if(duplicate){
+    setMsg("Already registered","error");
+    document.getElementById("submitBtn").disabled=false;
     return;
   }
 
-  fetch(API_URL)
-  .then(r=>r.json())
-  .then(data=>{
-
-    const exists=data.some(x=>{
-      return cleanPhone(x.emergency_contact||"")===cleaned;
-    });
-
-    if(exists){
-      msg.innerText="Already checked in";
-      return;
-    }
-
-    fetch(API_URL,{
+  try {
+    await fetch(API_URL,{
       method:"POST",
-      headers:{"Content-Type":"application/json"},
+      headers:{ "Content-Type":"application/json" },
       body:JSON.stringify({
         data:[{
           name,
           email,
-          emergency_contact:cleaned,
-          adults,
-          children,
-          total:adults+children,
-          time:getTime()
+          phone,
+          adults:selectedAdults,
+          children:selectedChildren,
+          time:new Date().toISOString()
         }]
       })
-    })
-    .then(()=>{
-      msg.innerText="Checked in successfully!";
-      adults=1;
-      children=0;
-      document.getElementById("adultCount").innerText=1;
-      document.getElementById("childCount").innerText=0;
     });
 
-  });
+    setMsg("Successfully registered","success");
 
+    localStorage.setItem("name",name);
+    localStorage.setItem("email",email);
+    localStorage.setItem("phone",phone);
+
+  } catch(err){
+    setMsg("Error occurred","error");
+  }
+
+  document.getElementById("submitBtn").disabled=false;
 }
 
-/* ADMIN */
-function openAdmin(){
+/* AUTO FILL */
+const nameInput=document.getElementById("name");
+const emailInput=document.getElementById("email");
+const phoneInput=document.getElementById("phone");
 
-  const pin=prompt("Enter PIN");
-
-  if(pin!==ADMIN_PIN) return;
-
-  document.getElementById("stats").style.display="block";
-
-  fetch(API_URL)
-  .then(r=>r.json())
-  .then(data=>{
-
-    let a=0,c=0;
-
-    data.forEach(x=>{
-      a+=Number(x.adults||0);
-      c+=Number(x.children||0);
-    });
-
-    document.getElementById("tAdults").innerText=a;
-    document.getElementById("tChildren").innerText=c;
-    document.getElementById("tTotal").innerText=a+c;
-
-  });
-
-}
-
+window.onload=()=>{
+  nameInput.value=localStorage.getItem("name")||"";
+  emailInput.value=localStorage.getItem("email")||"";
+  phoneInput.value=localStorage.getItem("phone")||"";
+};
 </script>
 
 </body>
