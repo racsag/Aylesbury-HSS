@@ -6,49 +6,136 @@
 <title> Aylesbury HSS </title>
 
 <style>
+*{
+  box-sizing:border-box;
+  font-family:system-ui, -apple-system, Segoe UI, Roboto;
+}
+
 body{
-  font-family: Arial;
-  background:#0f172a;
-  color:white;
+  margin:0;
+  min-height:100vh;
   display:flex;
   justify-content:center;
-  align-items:center; 
-  height:100vh;
-  margin:0;
+  align-items:center;
+  background: radial-gradient(circle at top,#1f2937,#0b1220);
+  color:white;
 }
 
 .container{
-  width:340px;
+  width:360px;
+  background:rgba(17,24,39,0.9);
+  padding:24px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,0.06);
+  box-shadow:0 25px 60px rgba(0,0,0,0.6);
+}
+
+h2{
+  text-align:center;
+  margin-bottom:18px;
+}
+
+.input{
+  width:100%;
+  padding:12px 14px;
+  margin:8px 0;
+  border-radius:12px;
+  border:none;
   background:#111827;
-  padding:20px;
-  border-radius:16px;
+  color:white;
+  outline:none;
 }
 
-input{
-  width:100%;
-  padding:10px;
-  margin:6px 0;
-  border-radius:8px;
-  border:none;
+.input:focus{
+  outline:1px solid #6366f1;
 }
 
-button{
-  width:100%;
-  padding:10px;
+.counter-box{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:#111827;
+  padding:12px 14px;
+  border-radius:14px;
   margin-top:10px;
+}
+
+.label{
+  font-weight:600;
+}
+
+.counter{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.counter button{
+  width:34px;
+  height:34px;
+  border-radius:10px;
   border:none;
-  border-radius:8px;
+  background:#1f2937;
+  color:white;
+  font-size:18px;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.counter button:hover{
+  background:#374151;
+}
+
+.count{
+  min-width:24px;
+  text-align:center;
+  font-weight:600;
+}
+
+.primary{
+  width:100%;
+  margin-top:18px;
+  padding:13px;
+  border:none;
+  border-radius:14px;
+  font-weight:600;
+  color:white;
+  cursor:pointer;
+  background:linear-gradient(135deg,#6366f1,#8b5cf6);
+  box-shadow:0 10px 25px rgba(99,102,241,0.35);
+}
+
+.primary:hover{
+  transform:translateY(-1px);
+}
+
+.secondary{
+  width:100%;
+  margin-top:10px;
+  padding:12px;
+  border:none;
+  border-radius:14px;
+  background:#111827;
+  color:#cbd5e1;
   cursor:pointer;
 }
 
-.primary{background:#6366f1;color:white;}
-.counter{
-  display:flex;
-  justify-content:space-between;
-  margin:10px 0;
+.status{
+  text-align:center;
+  margin-top:12px;
+  min-height:20px;
+  font-weight:600;
 }
-.small{font-size:12px;opacity:0.7;margin-top:10px;}
-.status{text-align:center;margin-top:10px;}
+
+.gdpr{
+  margin-top:14px;
+  font-size:11px;
+  color:#9ca3af;
+  line-height:1.5;
+  background:#0f172a;
+  padding:12px;
+  border-radius:12px;
+}
 </style>
 </head>
 
@@ -58,54 +145,57 @@ button{
 
 <h2> Aylesbury HSS </h2>
 
-<input id="name" placeholder="Name">
-<input id="phone" placeholder="Phone">
-<input id="email" placeholder="Email (optional)">
+<input class="input" id="name" placeholder="Full Name">
+<input class="input" id="phone" placeholder="Phone Number">
+<input class="input" id="email" placeholder="Email (Optional)">
 
-<div class="counter">
-  Adults:
-  <div>
-    <button onclick="change('adults',-1)">-</button>
-    <span id="adults">0</span>
+<div class="counter-box">
+  <div class="label">Adults</div>
+  <div class="counter">
+    <button onclick="change('adults',-1)">−</button>
+    <div class="count" id="adults">0</div>
     <button onclick="change('adults',1)">+</button>
   </div>
 </div>
 
-<div class="counter">
-  Children:
-  <div>
-    <button onclick="change('children',-1)">-</button>
-    <span id="children">0</span>
+<div class="counter-box">
+  <div class="label">Children</div>
+  <div class="counter">
+    <button onclick="change('children',-1)">−</button>
+    <div class="count" id="children">0</div>
     <button onclick="change('children',1)">+</button>
   </div>
 </div>
 
-<label style="font-size:12px;">
-<input type="checkbox" id="consent"> I agree to GDPR & Data Privacy
+<label style="display:flex;gap:8px;margin-top:12px;font-size:12px;color:#cbd5e1;">
+  <input type="checkbox" id="consent">
+  I agree to GDPR & Data Privacy
 </label>
 
 <button class="primary" onclick="submitData()">Check In</button>
 
 <div class="status" id="status"></div>
 
-<div class="small">
-GDPR & Data Privacy: Data is stored securely in Google Sheets and used only for event management.
+<div class="gdpr">
+GDPR & Data Privacy: Your data is securely stored in Google Sheets via SheetDB and used only for event management. You may request deletion at any time.
 </div>
 
 </div>
 
 <script>
 
-const API_URL = "https://sheetdb.io/api/v1/d2qwcelvfejm5";
+const API_URL = "YOUR_SHEETDB_URL";
 
 let adults = 0;
 let children = 0;
 
 function change(type,val){
+
   if(type==="adults"){
     adults = Math.max(0, adults + val);
     document.getElementById("adults").innerText = adults;
   }
+
   if(type==="children"){
     children = Math.max(0, children + val);
     document.getElementById("children").innerText = children;
@@ -139,24 +229,21 @@ async function submitData(){
 
     const res = await fetch(API_URL,{
       method:"POST",
-      headers:{
-        "Content-Type":"application/json"
-      },
+      headers:{ "Content-Type":"application/json" },
       body:JSON.stringify({
-        data:[
-          {
-            name,
-            phone,
-            email: email || "",
-            adults,
-            children,
-            time:new Date().toLocaleString()
-          }
-        ]
+        data:[{
+          name,
+          phone,
+          email: email || "",
+          adults,
+          children,
+          time:new Date().toLocaleString()
+        }]
       })
     });
 
     if(res.ok){
+
       setStatus("Registered ✔");
 
       setTimeout(()=>{
@@ -180,9 +267,8 @@ async function submitData(){
       setStatus("Failed to submit");
     }
 
-  } catch(err){
-    console.log(err);
-    setStatus("Error connecting to sheet");
+  }catch(e){
+    setStatus("Connection error");
   }
 }
 
