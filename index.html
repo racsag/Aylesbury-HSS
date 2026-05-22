@@ -238,17 +238,38 @@ async function submitData(){
     setStatus("Please accept GDPR consent");
     return;
   }
-const existingRes = await fetch(API_URL);
+
+  const existingRes = await fetch(API_URL);
 const existingData = await existingRes.json();
 
-const exists = existingData.some(
-  item => item.phone === phone
-);
+const cleanedPhone = phone.replace(/\s/g, '');
+const cleanedEmail = email.trim().toLowerCase();
+
+const exists = existingData.some(item => {
+
+  const savedPhone = String(item.phone || '')
+    .replace(/\s/g, '');
+
+  const savedEmail = String(item.email || '')
+    .trim()
+    .toLowerCase();
+
+  const samePhone =
+    cleanedPhone &&
+    savedPhone === cleanedPhone;
+
+  const sameEmail =
+    cleanedEmail &&
+    savedEmail &&
+    savedEmail === cleanedEmail;
+
+  return samePhone || sameEmail;
+});
 
 if(exists){
   setStatus("Already registered");
   return;
-}
+    }
   setStatus("Registering...");
 
   try{
