@@ -192,7 +192,19 @@ const API_URL = "https://sheetdb.io/api/v1/d2qwcelvfejm5";
 
 let adults = 0;
 let children = 0;
+<script>
+function getWeekNumber(date){
 
+  const firstDay = new Date(date.getFullYear(), 0, 1);
+
+  const pastDays = (
+    date - firstDay
+  ) / 86400000;
+
+  return Math.ceil(
+    (pastDays + firstDay.getDay() + 1) / 7
+  );
+  }
 function change(type,val){
 
   if(type==="adults"){
@@ -241,7 +253,10 @@ async function submitData(){
           email: email || "",
           adults,
           children,
-          time:new Date().toLocaleString()
+          week: "Week " + getWeekNumber(new Date()),
+month: new Date().toLocaleString('en-GB', {
+  month: 'long'
+})
         }]
       })
     });
