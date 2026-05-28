@@ -3,12 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title> Aylesbury HSS </title>
+<title>Aylesbury HSS</title>
 
 <style>
+
 *{
   box-sizing:border-box;
-  font-family:system-ui, -apple-system, Segoe UI, Roboto;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto;
 }
 
 body{
@@ -17,15 +18,16 @@ body{
   display:flex;
   justify-content:center;
   align-items:center;
-  background: radial-gradient(circle at top,#1f2937,#0b1220);
+  background:radial-gradient(circle at top,#1f2937,#0b1220);
   color:white;
+  padding:20px;
 }
 
 .container{
   width:360px;
-  background:rgba(17,24,39,0.9);
+  background:rgba(17,24,39,0.92);
   padding:24px;
-  border-radius:22px;
+  border-radius:24px;
   border:1px solid rgba(255,255,255,0.06);
   box-shadow:0 25px 60px rgba(0,0,0,0.6);
 }
@@ -39,7 +41,7 @@ h2{
   width:100%;
   padding:12px 14px;
   margin:8px 0;
-  border-radius:12px;
+  border-radius:14px;
   border:none;
   background:#111827;
   color:white;
@@ -73,8 +75,8 @@ h2{
 .counter button{
   width:34px;
   height:34px;
-  border-radius:10px;
   border:none;
+  border-radius:10px;
   background:#1f2937;
   color:white;
   font-size:18px;
@@ -103,10 +105,16 @@ h2{
   cursor:pointer;
   background:linear-gradient(135deg,#6366f1,#8b5cf6);
   box-shadow:0 10px 25px rgba(99,102,241,0.35);
+  transition:0.2s;
 }
 
 .primary:hover{
   transform:translateY(-1px);
+}
+
+.primary:disabled{
+  opacity:0.7;
+  cursor:not-allowed;
 }
 
 .secondary{
@@ -128,7 +136,7 @@ h2{
 }
 
 .gdpr{
-  margin-top:14px;
+  margin-top:16px;
   font-size:11px;
   color:#9ca3af;
   line-height:1.5;
@@ -136,6 +144,21 @@ h2{
   padding:12px;
   border-radius:12px;
 }
+
+#adminPanel{
+  display:none;
+  margin-top:18px;
+  background:#0f172a;
+  padding:18px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,0.08);
+}
+
+.admin-title{
+  text-align:center;
+  margin-top:0;
+}
+
 </style>
 </head>
 
@@ -143,40 +166,95 @@ h2{
 
 <div class="container">
 
-<h2> Aylesbury HSS </h2>
+<h2>Aylesbury HSS</h2>
 
 <input class="input" id="name" placeholder="Full Name">
+
 <input class="input" id="phone" placeholder="Phone Number">
+
 <input class="input" id="email" placeholder="Email (Optional)">
 
 <div class="counter-box">
   <div class="label">Adults</div>
+
   <div class="counter">
+
     <button onclick="change('adults',-1)">−</button>
+
     <div class="count" id="adults">0</div>
+
     <button onclick="change('adults',1)">+</button>
+
   </div>
 </div>
 
 <div class="counter-box">
   <div class="label">Children</div>
+
   <div class="counter">
+
     <button onclick="change('children',-1)">−</button>
+
     <div class="count" id="children">0</div>
+
     <button onclick="change('children',1)">+</button>
+
   </div>
 </div>
 
-<label style="display:flex;gap:8px;margin-top:12px;font-size:12px;color:#cbd5e1;">
-  <input type="checkbox" id="consent">
-  I agree to GDPR & Data Privacy
+<label style="
+display:flex;
+gap:8px;
+margin-top:12px;
+font-size:12px;
+color:#cbd5e1;
+">
+
+<input type="checkbox" id="consent">
+
+I agree to GDPR & Data Privacy
+
 </label>
 
-<button class="primary" onclick="submitData()">Check In</button>
+<button class="primary" id="submitBtn" onclick="submitData()">
+Check In
+</button>
+
+<button class="secondary" onclick="openAdmin()">
+Admin Dashboard
+</button>
 
 <div class="status" id="status"></div>
 
+<div id="adminPanel">
+
+<h3 class="admin-title">
+Admin Dashboard
+</h3>
+
+<div class="counter-box">
+  <div class="label">Total Adults</div>
+  <div id="adminAdults">0</div>
+</div>
+
+<div class="counter-box">
+  <div class="label">Total Children</div>
+  <div id="adminChildren">0</div>
+</div>
+
+<div class="counter-box">
+  <div class="label">Grand Total</div>
+  <div id="adminTotal">0</div>
+</div>
+
+<button class="secondary" onclick="closeAdmin()">
+Close
+</button>
+
+</div>
+
 <div class="gdpr">
+
 <strong>Privacy & Data Protection</strong><br><br>
 
 We respect your privacy. Your information is collected only for event management and attendance purposes.<br><br>
@@ -184,142 +262,345 @@ We respect your privacy. Your information is collected only for event management
 Data is securely stored and processed through a trusted cloud service. It is never sold or used for marketing.<br><br>
 
 You may request access or deletion of your data at any time in accordance with GDPR.
+
+</div>
+
 </div>
 
 <script>
 
-const API_URL = "https://sheetdb.io/api/v1/d2qwcelvfejm5";
+const API_URL =
+"https://sheetdb.io/api/v1/d2qwcelvfejm5";
+
+const ADMIN_PIN = "1234";
 
 let adults = 0;
 let children = 0;
 
 function getWeekNumber(date){
 
-  const firstDay = new Date(date.getFullYear(), 0, 1);
+  const firstDay =
+    new Date(date.getFullYear(),0,1);
 
-  const pastDays = (
-    date - firstDay
-  ) / 86400000;
+  const pastDays =
+    (date - firstDay) / 86400000;
 
   return Math.ceil(
     (pastDays + firstDay.getDay() + 1) / 7
   );
-  }
+}
+
+function normalizePhone(phone){
+
+  return phone
+    .replace(/\s/g,'')
+    .replace(/^\+44/,'0');
+}
+
 function change(type,val){
 
   if(type==="adults"){
+
     adults = Math.max(0, adults + val);
-    document.getElementById("adults").innerText = adults;
+
+    document.getElementById("adults").innerText =
+      adults;
   }
 
   if(type==="children"){
+
     children = Math.max(0, children + val);
-    document.getElementById("children").innerText = children;
+
+    document.getElementById("children").innerText =
+      children;
   }
 }
 
-function setStatus(msg){
-  document.getElementById("status").innerText = msg;
+function setStatus(msg,color="#fff"){
+
+  const status =
+    document.getElementById("status");
+
+  status.innerText = msg;
+
+  status.style.color = color;
 }
 
 async function submitData(){
 
-  const name = document.getElementById("name").value.trim();
-  const phone = document.getElementById("phone").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const consent = document.getElementById("consent").checked;
+  const btn =
+    document.getElementById("submitBtn");
+
+  const name =
+    document.getElementById("name")
+    .value.trim();
+
+  const phone =
+    document.getElementById("phone")
+    .value.trim();
+
+  const email =
+    document.getElementById("email")
+    .value.trim();
+
+  const consent =
+    document.getElementById("consent")
+    .checked;
 
   if(!name || !phone){
-    setStatus("Please fill required fields");
+
+    setStatus(
+      "Please fill required fields",
+      "#fca5a5"
+    );
+
+    return;
+  }
+
+  if(adults + children < 1){
+
+    setStatus(
+      "Add at least 1 attendee",
+      "#fca5a5"
+    );
+
     return;
   }
 
   if(!consent){
-    setStatus("Please accept GDPR consent");
+
+    setStatus(
+      "Please accept GDPR consent",
+      "#fca5a5"
+    );
+
     return;
   }
 
-  const existingRes = await fetch(API_URL);
-const existingData = await existingRes.json();
+  btn.disabled = true;
 
-const cleanedPhone = phone.replace(/\s/g, '');
-const cleanedEmail = email.trim().toLowerCase();
-
-const exists = existingData.some(item => {
-
-  const savedPhone = String(item.phone || '')
-    .replace(/\s/g, '');
-
-  const savedEmail = String(item.email || '')
-    .trim()
-    .toLowerCase();
-
-  const samePhone =
-    cleanedPhone &&
-    savedPhone === cleanedPhone;
-
-  const sameEmail =
-    cleanedEmail &&
-    savedEmail &&
-    savedEmail === cleanedEmail;
-
-  return samePhone || sameEmail;
-});
-
-if(exists){
-  setStatus("Already registered");
-  return;
-    }
-  setStatus("Registering...");
+  btn.innerText = "Registering...";
 
   try{
 
+    const existingRes =
+      await fetch(API_URL);
+
+    const existingData =
+      await existingRes.json();
+
+    const cleanedPhone =
+      normalizePhone(phone);
+
+    const cleanedEmail =
+      email.toLowerCase();
+
+    const exists =
+      existingData.some(item => {
+
+      const savedPhone =
+        normalizePhone(
+          String(item.phone || '')
+        );
+
+      const savedEmail =
+        String(item.email || '')
+        .trim()
+        .toLowerCase();
+
+      return (
+        savedPhone === cleanedPhone ||
+        (
+          cleanedEmail &&
+          savedEmail === cleanedEmail
+        )
+      );
+    });
+
+    if(exists){
+
+      setStatus(
+        "Already registered",
+        "#fbbf24"
+      );
+
+      btn.disabled = false;
+
+      btn.innerText = "Check In";
+
+      return;
+    }
+
     const res = await fetch(API_URL,{
+
       method:"POST",
-      headers:{ "Content-Type":"application/json" },
+
+      headers:{
+        "Content-Type":"application/json"
+      },
+
       body:JSON.stringify({
+
         data:[{
+
           name,
+
           phone,
+
           email: email || "",
+
           adults,
+
           children,
-          week: "Week " + getWeekNumber(new Date()),
-month: new Date().toLocaleString('en-GB', {
-  month: 'long'
-})
+
+          total: adults + children,
+
+          week:
+            "Week " +
+            getWeekNumber(new Date()),
+
+          month:
+            new Date().toLocaleString(
+              'en-GB',
+              { month:'long' }
+            ),
+
+          time:
+            new Date().toLocaleString(
+              'en-GB'
+            )
+
         }]
       })
     });
 
     if(res.ok){
 
-      setStatus("Registered ✔");
+      setStatus(
+        "Registered Successfully ✔",
+        "#86efac"
+      );
 
       setTimeout(()=>{
 
-        document.getElementById("name").value="";
-        document.getElementById("phone").value="";
-        document.getElementById("email").value="";
-        document.getElementById("consent").checked=false;
+        document.getElementById("name").value =
+          "";
 
-        adults=0;
-        children=0;
+        document.getElementById("phone").value =
+          "";
 
-        document.getElementById("adults").innerText=0;
-        document.getElementById("children").innerText=0;
+        document.getElementById("email").value =
+          "";
+
+        document.getElementById("consent").checked =
+          false;
+
+        adults = 0;
+        children = 0;
+
+        document.getElementById("adults")
+          .innerText = 0;
+
+        document.getElementById("children")
+          .innerText = 0;
 
         setStatus("");
 
+        btn.disabled = false;
+
+        btn.innerText = "Check In";
+
       },2000);
 
-    } else {
-      setStatus("Failed to submit");
+    }else{
+
+      setStatus(
+        "Failed to submit",
+        "#fca5a5"
+      );
+
+      btn.disabled = false;
+
+      btn.innerText = "Check In";
     }
 
   }catch(e){
-    setStatus("Connection error");
+
+    setStatus(
+      "Connection error",
+      "#fca5a5"
+    );
+
+    btn.disabled = false;
+
+    btn.innerText = "Check In";
   }
+}
+
+async function openAdmin(){
+
+  const pin = prompt(
+    "Enter Admin PIN"
+  );
+
+  if(pin !== ADMIN_PIN){
+
+    alert("Wrong PIN");
+
+    return;
+  }
+
+  try{
+
+    const res =
+      await fetch(API_URL);
+
+    const data =
+      await res.json();
+
+    let totalAdults = 0;
+    let totalChildren = 0;
+
+    data.forEach(item => {
+
+      totalAdults +=
+        Number(item.adults || 0);
+
+      totalChildren +=
+        Number(item.children || 0);
+
+    });
+
+    document.getElementById(
+      "adminAdults"
+    ).innerText = totalAdults;
+
+    document.getElementById(
+      "adminChildren"
+    ).innerText = totalChildren;
+
+    document.getElementById(
+      "adminTotal"
+    ).innerText =
+      totalAdults + totalChildren;
+
+    document.getElementById(
+      "adminPanel"
+    ).style.display = "block";
+
+  }catch(e){
+
+    alert(
+      "Failed loading dashboard"
+    );
+  }
+}
+
+function closeAdmin(){
+
+  document.getElementById(
+    "adminPanel"
+  ).style.display = "none";
 }
 
 </script>
