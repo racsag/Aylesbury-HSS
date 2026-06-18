@@ -325,17 +325,17 @@ function setStatus(msg,color="#fff"){
 
   status.style.color = color;
 }
-function getHSSWeekKey() {
+  function getHSSWeekKey() {
 
   const today = new Date();
 
   const weekStart = new Date(today);
 
-  const daysSinceThursday =
-    (today.getDay() + 3) % 7;
+  const daysSinceFriday =
+    (today.getDay() + 2) % 7;
 
   weekStart.setDate(
-    today.getDate() - daysSinceThursday
+    today.getDate() - daysSinceFriday
   );
 
   weekStart.setHours(0,0,0,0);
@@ -343,7 +343,8 @@ function getHSSWeekKey() {
   return weekStart
     .toISOString()
     .split('T')[0];
-}
+  }
+
 async function submitData(){
 
   const btn =
