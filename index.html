@@ -325,7 +325,25 @@ function setStatus(msg,color="#fff"){
 
   status.style.color = color;
 }
+function getHSSWeekKey() {
 
+  const today = new Date();
+
+  const weekStart = new Date(today);
+
+  const daysSinceThursday =
+    (today.getDay() + 3) % 7;
+
+  weekStart.setDate(
+    today.getDate() - daysSinceThursday
+  );
+
+  weekStart.setHours(0,0,0,0);
+
+  return weekStart
+    .toISOString()
+    .split('T')[0];
+}
 async function submitData(){
 
   const btn =
@@ -454,10 +472,9 @@ async function submitData(){
           children,
 
           total: adults + children,
-
+          
           week:
-            "Week " +
-            getWeekNumber(new Date()),
+  getHSSWeekKey(),,
 
           month:
             new Date().toLocaleString(
@@ -558,20 +575,24 @@ async function openAdmin(){
     const data =
       await res.json();
 
-    let totalAdults = 0;
-    let totalChildren = 0;
+   const currentWeek = getHSSWeekKey();
 
-    data.forEach(item => {
+let totalAdults = 0;
+let totalChildren = 0;
 
-      totalAdults +=
-        Number(item.adults || 0);
+data.forEach(item => {
 
-      totalChildren +=
-        Number(item.children || 0);
+  if(item.week === currentWeek){
 
-    });
+    totalAdults += Number(item.adults || 0);
 
-    document.getElementById(
+    totalChildren += Number(item.children || 0);
+
+  }
+
+});
+    
+  document.getElementById(
       "adminAdults"
     ).innerText = totalAdults;
 
