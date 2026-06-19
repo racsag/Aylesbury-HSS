@@ -415,26 +415,33 @@ async function submitData(){
       email.toLowerCase();
 
     const exists =
-      existingData.some(item => {
+     const currentWeek = getHSSWeekKey();
 
-      const savedPhone =
-        normalizePhone(
-          String(item.phone || '')
-        );
+const exists =
+  existingData.some(item => {
 
-      const savedEmail =
-        String(item.email || '')
-        .trim()
-        .toLowerCase();
+    if(item.week !== currentWeek){
+      return false;
+    }
 
-      return (
-        savedPhone === cleanedPhone ||
-        (
-          cleanedEmail &&
-          savedEmail === cleanedEmail
-        )
+    const savedPhone =
+      normalizePhone(
+        String(item.phone || '')
       );
-    });
+
+    const savedEmail =
+      String(item.email || '')
+      .trim()
+      .toLowerCase();
+
+    return (
+      savedPhone === cleanedPhone ||
+      (
+        cleanedEmail &&
+        savedEmail === cleanedEmail
+      )
+    );
+}); 
 
     if(exists){
 
