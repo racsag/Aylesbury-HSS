@@ -414,8 +414,7 @@ async function submitData(){
     const cleanedEmail =
       email.toLowerCase();
 
-    const exists =
-     const currentWeek = getHSSWeekKey();
+const currentWeek = getHSSWeekKey();
 
 const exists =
   existingData.some(item => {
@@ -425,9 +424,7 @@ const exists =
     }
 
     const savedPhone =
-      normalizePhone(
-        String(item.phone || '')
-      );
+      normalizePhone(String(item.phone || ''));
 
     const savedEmail =
       String(item.email || '')
@@ -441,7 +438,7 @@ const exists =
         savedEmail === cleanedEmail
       )
     );
-}); 
+  });
 
     if(exists){
 
@@ -592,9 +589,11 @@ data.forEach(item => {
 
   if(item.week === currentWeek){
 
-    totalAdults += Number(item.adults || 0);
+    const adultsCount = parseInt(item.adults, 10) || 0;
+const childrenCount = parseInt(item.children, 10) || 0;
 
-    totalChildren += Number(item.children || 0);
+totalAdults += adultsCount;
+totalChildren += childrenCount;
 
   }
 
