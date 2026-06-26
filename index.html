@@ -314,7 +314,7 @@ function setStatus(msg,color="#fff"){
 }
 
 
-  function getEventKey(){
+  /*function getEventKey(){
   const today = new Date();
 
   const day = today.getDay(); // Sun=0 ... Fri=5
@@ -330,11 +330,11 @@ function setStatus(msg,color="#fff"){
     String(friday.getMonth()+1).padStart(2,'0') +
     "-" +
     String(friday.getDate()).padStart(2,'0');
-  }
+  } */
   
   
   
-  /*function getHSSWeekKey() {
+  function getHSSWeekKey() {
 
   const today = new Date();
 
@@ -349,7 +349,7 @@ function setStatus(msg,color="#fff"){
   const d = String(weekStart.getDate()).padStart(2,'0');
 
   return `${y}-${m}-${d}`;
-  }*/
+  }
 
 async function submitData(){
 
@@ -420,7 +420,7 @@ async function submitData(){
     const cleanedEmail =
       email.toLowerCase();
 
-    const currentWeek = getEventKey();
+    const currentWeek = getHSSWeekKey();
 
 const exists =
   existingData.some(item => {
@@ -586,7 +586,7 @@ async function openAdmin(){
     const data =
       await res.json();
 
-    const currentWeek = getEventKey();
+    const currentWeek = getHSSWeekKey();
 
 let totalAdults = 0;
 let totalChildren = 0;
