@@ -332,23 +332,14 @@ function setStatus(msg,color="#fff"){
     String(friday.getDate()).padStart(2,'0');
   } */
   
-  
-  
   function getHSSWeekKey() {
-
   const today = new Date();
 
   const weekStart = new Date(today);
-
   const daysSinceFriday = (today.getDay() + 2) % 7;
-
   weekStart.setDate(today.getDate() - daysSinceFriday);
 
-  const y = weekStart.getFullYear();
-  const m = String(weekStart.getMonth() + 1).padStart(2,'0');
-  const d = String(weekStart.getDate()).padStart(2,'0');
-
-  return `${y}-${m}-${d}`;
+  return weekStart.toISOString().split("T")[0]; // YYYY-MM-DD
   }
 
 async function submitData(){
@@ -421,30 +412,27 @@ async function submitData(){
       email.toLowerCase();
 
     const currentWeek = getHSSWeekKey();
+const exists = existingData.some(item => {
 
-const exists =
-  existingData.some(item => {
+  const savedPhone = normalizePhone(String(item.phone || ''));
 
-    if(item.week !== currentWeek){
-      return false;
-    }
+  const savedEmail = String(item.email || '').trim().toLowerCase();
 
-    const savedPhone =
-      normalizePhone(String(item.phone || ''));
+  const savedWeek = String(item.week || '').trim();
 
-    const savedEmail =
-      String(item.email || '')
-      .trim()
-      .toLowerCase();
+  const isSameWeek =
+    savedWeek === currentWeek ||
+    savedWeek.startsWith("Week"); // supports old Week24 data
 
-    return (
+  return (
+    isSameWeek &&
+    (
       savedPhone === cleanedPhone ||
-      (
-        cleanedEmail &&
-        savedEmail === cleanedEmail
-      )
-    );
-  });
+      (cleanedEmail && savedEmail === cleanedEmail)
+    )
+  );
+});
+
 
     if(exists){
 
@@ -593,7 +581,16 @@ let totalChildren = 0;
 
 data.forEach(item => {
 
-  if(item.week === currentWeek){
+ const savedWeek = String(item.week || '').trim();
+
+const isSameWeek =
+  savedWeek === currentWeek ||
+  savedWeek.startsWith("Week");
+
+if (isSameWeek) {
+  
+ /* if(item.week === currentWeek)*/
+  {
 
     const adultsCount = parseInt(item.adults, 10) || 0;
 const childrenCount = parseInt(item.children, 10) || 0;
