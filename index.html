@@ -312,7 +312,29 @@ function setStatus(msg,color="#fff"){
 
   status.style.color = color;
 }
-  function getHSSWeekKey() {
+
+
+  function getEventKey(){
+  const today = new Date();
+
+  const day = today.getDay(); // Sun=0 ... Fri=5
+
+  const daysToFriday = (5 - day + 7) % 7;
+
+  const friday = new Date(today);
+  friday.setDate(today.getDate() + daysToFriday);
+  friday.setHours(0,0,0,0);
+
+  return friday.getFullYear() +
+    "-" +
+    String(friday.getMonth()+1).padStart(2,'0') +
+    "-" +
+    String(friday.getDate()).padStart(2,'0');
+  }
+  
+  
+  
+  /*function getHSSWeekKey() {
 
   const today = new Date();
 
@@ -327,30 +349,7 @@ function setStatus(msg,color="#fff"){
   const d = String(weekStart.getDate()).padStart(2,'0');
 
   return `${y}-${m}-${d}`;
-  }
-  
-  
-  
-  
-  /* function getHSSWeekKey() {
-
-  const today = new Date();
-
-  const weekStart = new Date(today);
-
-  const daysSinceFriday =
-    (today.getDay() + 2) % 7;
-
-  weekStart.setDate(
-    today.getDate() - daysSinceFriday
-  );
-
-  weekStart.setHours(0,0,0,0);
-
-  return weekStart
-    .toISOString()
-    .split('T')[0];
-  } */
+  }*/
 
 async function submitData(){
 
@@ -421,7 +420,7 @@ async function submitData(){
     const cleanedEmail =
       email.toLowerCase();
 
-const currentWeek = getHSSWeekKey();
+    const currentWeek = getEventKey();
 
 const exists =
   existingData.some(item => {
@@ -587,7 +586,7 @@ async function openAdmin(){
     const data =
       await res.json();
 
-   const currentWeek = getHSSWeekKey();
+    const currentWeek = getEventKey();
 
 let totalAdults = 0;
 let totalChildren = 0;
