@@ -318,6 +318,26 @@ function setStatus(msg,color="#fff"){
 
   const weekStart = new Date(today);
 
+  const daysSinceFriday = (today.getDay() + 2) % 7;
+
+  weekStart.setDate(today.getDate() - daysSinceFriday);
+
+  const y = weekStart.getFullYear();
+  const m = String(weekStart.getMonth() + 1).padStart(2,'0');
+  const d = String(weekStart.getDate()).padStart(2,'0');
+
+  return `${y}-${m}-${d}`;
+  }
+  
+  
+  
+  
+  /* function getHSSWeekKey() {
+
+  const today = new Date();
+
+  const weekStart = new Date(today);
+
   const daysSinceFriday =
     (today.getDay() + 2) % 7;
 
@@ -330,7 +350,7 @@ function setStatus(msg,color="#fff"){
   return weekStart
     .toISOString()
     .split('T')[0];
-  }
+  } */
 
 async function submitData(){
 
