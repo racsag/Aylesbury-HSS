@@ -171,13 +171,22 @@ let adults = 0;
 let children = 0;
 
 /* ---------------- WEEK SYSTEM (FIXED) ---------------- */
-function getHSSWeekKey(){
-  const now = new Date();
-  const start = new Date(now.getFullYear(),0,1);
-  const diff = now - start;
-  const weekNum = Math.ceil(diff / (1000*60*60*24*7));
-  return `Week ${weekNum}`;
-}
+function getHSSWeekKey() {
+    const today = new Date();
+
+    // Thursday decides the ISO week
+    const target = new Date(today.valueOf());
+    const dayNr = (today.getDay() + 6) % 7;
+    target.setDate(target.getDate() - dayNr + 3);
+
+    const firstThursday = new Date(target.getFullYear(), 0, 4);
+    const firstDayNr = (firstThursday.getDay() + 6) % 7;
+    firstThursday.setDate(firstThursday.getDate() - firstDayNr + 3);
+
+    const weekNumber =
+        1 + Math.round((target - firstThursday) / 604800000);
+
+    return `Week ${weekNumber}`;
 
 /* ---------------- COUNTERS ---------------- */
 function change(type,val){
@@ -199,6 +208,7 @@ function setStatus(msg,color="#fff"){
 }
 
 /* ---------------- SUBMIT ---------------- */
+  if(btn.disabled) return;
 async function submitData(){
 
   const btn = document.getElementById("submitBtn");
@@ -233,13 +243,13 @@ async function submitData(){
 
     const currentWeek = getHSSWeekKey();
 
-    const cleanPhone = phone.replace(/\s/g,'').replace(/^\+44/,'0');
+    const cleanPhone = phone.replace(/\D/g,'').replace(/^44/,'0');
     const cleanEmail = email.toLowerCase();
 
     const exists = data.some(item => {
       if(item.week !== currentWeek) return false;
 
-      const sp = (item.phone||"").replace(/\s/g,'').replace(/^\+44/,'0');
+     const sp = (item.phone||"").replace(/\D/g,'').replace(/^44/,'0');
       const se = (item.email||"").toLowerCase();
 
       return sp === cleanPhone || (cleanEmail && se === cleanEmail);
@@ -263,12 +273,19 @@ async function submitData(){
           adults,
           children,
           week: currentWeek,
-          month: new Date().toLocaleString('en-GB',{month:'long'})
+          date: new Date().toLocaleDateString('en-GB'),
+month: new Date().toLocaleString('en-GB',{month:'long'})
+        
         }]
       })
     });
 
     setStatus("Registered ✔","#86efac");
+
+    document.getElementById("name").value = "";
+document.getElementById("phone").value = "";
+document.getElementById("email").value = "";
+document.getElementById("consent").checked = false;
 
     adults = 0;
     children = 0;
