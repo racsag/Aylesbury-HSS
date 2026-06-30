@@ -187,7 +187,8 @@ function getHSSWeekKey() {
         1 + Math.round((target - firstThursday) / 604800000);
 
     return `Week ${weekNumber}`;
-
+      }
+  
 /* ---------------- COUNTERS ---------------- */
 function change(type,val){
   if(type==="adults"){
@@ -208,10 +209,12 @@ function setStatus(msg,color="#fff"){
 }
 
 /* ---------------- SUBMIT ---------------- */
-  if(btn.disabled) return;
+  /* ---------------- SUBMIT ---------------- */
 async function submitData(){
 
   const btn = document.getElementById("submitBtn");
+
+  if(btn.disabled) return;
 
   const name = document.getElementById("name").value.trim();
   const phone = document.getElementById("phone").value.trim();
